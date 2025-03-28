@@ -16,11 +16,14 @@ public class PlayerController : MonoBehaviour
     private int jumpsLeft;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
-    
+
     [Header("Ground Detection")]
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
+
+    [Header("Animation")]
+    public Animator animator;
 
     private void Start()
     {
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         CheckGrounded();
+        UpdateAnimationState();
     }
 
     private void HandleMovement()
@@ -73,6 +77,13 @@ public class PlayerController : MonoBehaviour
     private void CheckGrounded()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+    }
+
+    private void UpdateAnimationState()
+    {
+        float speed = Mathf.Abs(rb.velocity.x);
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     private void OnDrawGizmosSelected()
